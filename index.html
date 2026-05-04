@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asia Technical Training Center | Graphics Design Exam</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-color: #f1f5f9;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border-color: #e2e8f0;
+            --radius: 12px;
+            --transition: all 0.2s ease-in-out;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 1.5rem 1rem;
+        }
+
+        .container { max-width: 850px; margin: 0 auto; }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .hidden { display: none !important; }
+
+        .header-section { text-align: center; margin-bottom: 2.5rem; }
+        .header-section h1 { font-size: 1.6rem; color: #0f172a; margin-bottom: 0.5rem; }
+        .header-section p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .info-bar {
+            background: #e0f2fe; color: #0284c7; padding: 1rem; border-radius: 8px; 
+            margin-bottom: 2rem; text-align: center; font-weight: 600; font-size: 1.05rem;
+        }
+
+        .input-group { margin-bottom: 2rem; }
+        .input-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #334155; }
+        .input-group input {
+            width: 100%; padding: 0.9rem 1rem; border: 1px solid #cbd5e1;
+            border-radius: 8px; font-size: 1rem; transition: var(--transition);
+        }
+        .input-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.9rem 1.5rem; border: none; border-radius: 8px;
+            font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: var(--transition);
+            width: 100%; gap: 8px;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { background: white; color: var(--text-main); border: 1px solid #cbd5e1; margin-top: 1rem; }
+        .btn-outline:hover { background: #f8fafc; border-color: #94a3b8; }
+
+        /* Exam Interface */
+        .sticky-header {
+            position: sticky; top: 0; z-index: 10;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color);
+            margin: -2.5rem -2.5rem 2rem -2.5rem; border-radius: var(--radius) var(--radius) 0 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .timer { font-weight: 700; color: var(--danger); font-size: 1.15rem; background: #fef2f2; padding: 0.4rem 1rem; border-radius: 20px; }
+
+        .question-box {
+            background: #fafafa; border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        .question-box.unanswered { border-color: var(--danger); background: #fef2f2; animation: shake 0.4s; }
+        .q-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 1.2rem; color: #1e293b; }
+        
+        .option-label {
+            display: flex; align-items: center; padding: 0.9rem 1rem;
+            border: 1px solid var(--border-color); border-radius: 6px;
+            cursor: pointer; background: white; margin-bottom: 0.6rem;
+            transition: var(--transition); font-weight: 500; font-size: 0.95rem;
+        }
+        .option-label:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        .option-label.selected { border-color: var(--primary); background: #eff6ff; color: var(--primary-hover); box-shadow: 0 0 0 1px var(--primary); }
+        .option-label input { margin-right: 1rem; width: 1.2rem; height: 1.2rem; accent-color: var(--primary); }
+
+        /* Result Section */
+        .score-card {
+            text-align: center; padding: 2.5rem; background: #f8fafc;
+            border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 2.5rem;
+        }
+        .score-card h3 { font-size: 3.5rem; color: var(--primary); line-height: 1; margin-bottom: 0.5rem; font-weight: 800; }
+
+        .explanation-box {
+            background: white; border: 1px solid var(--border-color); border-left: 5px solid var(--danger);
+            border-radius: 8px; padding: 1.5rem; margin-bottom: 1.2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .exp-q { font-weight: 600; margin-bottom: 1rem; font-size: 1.05rem; }
+        .exp-ans { margin-bottom: 0.5rem; font-size: 0.95rem; font-weight: 500; }
+        .exp-wrong { color: #b91c1c; background: #fef2f2; padding: 0.6rem 1rem; border-radius: 6px; }
+        .exp-correct { color: #047857; background: #ecfdf5; padding: 0.6rem 1rem; border-radius: 6px; }
+        .exp-details { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #cbd5e1; color: #475569; font-size: 0.95rem; line-height: 1.5; }
+
+        /* Leaderboard */
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+        th, td { padding: 1.2rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background: #f8fafc; font-weight: 700; color: #475569; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+        tr:hover td { background: #f8fafc; }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        @media (min-width: 640px) {
+            .btn-group { display: flex; gap: 1rem; }
+            .btn-group .btn { width: auto; flex: 1; margin-top: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="screen-welcome" class="card">
+        <div class="header-section">
+            <h1>Asia Technical Training Center</h1>
+            <p>Graphics Design (Batch 1) - Complete Assessment</p>
+        </div>
+        
+        <div class="info-bar">
+            ⏱ সময়: ৬০ মিনিট &nbsp;|&nbsp; 📝 প্রশ্ন: <span id="total-q-display">0</span>টি &nbsp;|&nbsp; ⚠️ সব প্রশ্ন বাধ্যতামূলক
+        </div>
+
+        <div class="input-group">
+            <label for="studentName">তোমার পুরো নাম লেখো:</label>
+            <input type="text" id="studentName" placeholder="যেমন: Mohammad Ali Shamol" autocomplete="off">
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="startExam()">🚀 পরীক্ষা শুরু করো</button>
+            <button class="btn btn-outline" onclick="showLeaderboard()">🏆 লিডারবোর্ড</button>
+        </div>
+    </div>
+
+    <div id="screen-exam" class="card hidden">
+        <div class="sticky-header">
+            <div style="font-weight: 600; color: #1e293b; font-size: 1.1rem;">👤 <span id="display-name"></span></div>
+            <div class="timer" id="timer-display">⏱ 60:00</div>
+        </div>
+
+        <form id="exam-form">
+            <div id="questions-container"></div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 2rem; padding: 1.2rem; font-size: 1.2rem;">✅ সম্পূর্ণ উত্তর জমা দাও</button>
+        </form>
+    </div>
+
+    <div id="screen-result" class="card hidden">
+        <div class="header-section">
+            <h2 style="font-size: 1.8rem;">অভিনন্দন, <span id="result-name-display" style="color: var(--primary);"></span>! 🎉</h2>
+            <p style="font-size: 1.1rem; margin-top: 0.5rem;">তোমার পরীক্ষার বিস্তারিত ফলাফল নিচে দেওয়া হলো</p>
+        </div>
+
+        <div class="score-card">
+            <h3 id="final-score-pct">0%</h3>
+            <p style="color: var(--text-muted); font-size: 1.2rem; margin-top: 1rem;">সঠিক উত্তর: <span id="correct-answers-count" style="font-weight: 700; color: #0f172a;">0</span> / <span id="total-q-result">0</span></p>
+            <p style="color: var(--text-muted); font-size: 1rem; margin-top: 0.5rem;">মোট সময় লেগেছে: <span id="time-taken-display" style="font-weight: 600;">00:00</span></p>
+        </div>
+
+        <div class="btn-group" style="margin-bottom: 2.5rem;">
+            <button class="btn btn-primary" onclick="showLeaderboard()">🏆 লিডারবোর্ড দেখো</button>
+            <button class="btn btn-outline" onclick="location.reload()">🏠 হোমে ফিরে যাও</button>
+        </div>
+
+        <div id="review-section" class="hidden">
+            <div style="background: var(--danger); color: white; padding: 1rem; border-radius: 8px; font-weight: 600; font-size: 1.1rem; margin-bottom: 1.5rem; text-align: center;">
+                ⚠️ যেসব প্রশ্নের উত্তর ভুল হয়েছে তার ব্যাখ্যা
+            </div>
+            <div id="review-container"></div>
+        </div>
+    </div>
+
+    <div id="screen-leaderboard" class="card hidden">
+        <div class="header-section">
+            <h2 style="font-size: 1.8rem;">🏆 টপ পারফর্মারস (লিডারবোর্ড)</h2>
+            <p>Graphics Design Batch 1</p>
+        </div>
+
+        <div style="overflow-x: auto; background: white; border-radius: 8px; border: 1px solid var(--border-color);">
+            <table>
+                <thead>
+                    <tr>
+                        <th>র‍্যাঙ্ক</th>
+                        <th>শিক্ষার্থীর নাম</th>
+                        <th>প্রাপ্ত স্কোর</th>
+                        <th>সময়</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body"></tbody>
+            </table>
+        </div>
+
+        <div style="text-align: center; margin-top: 2.5rem;">
+            <button class="btn btn-outline" onclick="location.reload()" style="max-width: 300px;">🏠 হোমে ফিরে যাও</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // All 48 Questions extracted from the provided images
+    const quizData = [
+        { q: "What does object expand do in illustrator?", options: ["Divide a single object too many", "Group multiple object into single", "Convert multiple objects into one", "Merge all color in an object"], c: 0, exp: "ইলাস্ট্রেটরে Expand ব্যবহার করলে একটি কমপ্লেক্স অবজেক্ট বা স্ট্রোক ভেঙে গিয়ে একাধিক সাধারণ পাথ (Path) বা শেপে বিভক্ত হয়ে যায়।" },
+        { q: "Registration mark used for?", options: ["Color Align", "Cutting", "Text Alignment", "Creating"], c: 0, exp: "ছাপার সময় সায়ান, ম্যাজেন্টা, ইয়েলো ও ব্ল্যাক (CMYK) কালার প্লেটগুলো একে অপরের সাথে ঠিকমতো এলাইন বা মিলেছে কি না, তা বুঝতে Registration Mark (Color Align) ব্যবহৃত হয়।" },
+        { q: "In Adobe Illustrator CC (2017), which of the following keyboard Shortcuts is used for deselecting the selected objects?", options: ["Shift+Ctrl+A", "Shift+Ctrl+D", "Shift+A", "Ctrl+D"], c: 0, exp: "ইলাস্ট্রেটরে কোনো অবজেক্ট সিলেক্ট করা থাকলে, কীবোর্ডে Shift+Ctrl+A চাপলে সেটি ডিসিলেক্ট হয়ে যায়।" },
+        { q: "Which one of the below is an example of an Absolute address (Excel)?", options: ["&A&5", "=A5", "c) A5$", "$A$5"], c: 3, exp: "এক্সেল-এ কোনো সেল অ্যাড্রেসকে ফিক্সড বা লক করে রাখতে কলাম এবং রো উভয়ের আগে ডলার ($) সাইন দেওয়া হয়, যেমন $A$5। একে Absolute Address বলে।" },
+        { q: "The design principle 'contrast' is used to:", options: ["Make elements blend together", "Create visual interest and hierarchy", "Ensure everything looks the same", "Simplify the design excessively"], c: 1, exp: "ডিজাইনে কন্ট্রাস্ট (যেমন- সাদার ওপর কালো টেক্সট) ব্যবহার করা হয় যাতে গুরুত্বপূর্ণ জিনিসগুলো সহজেই চোখে পড়ে এবং ডিজাইনে একটি ভিজ্যুয়াল হায়ারার্কি তৈরি হয়।" },
+        { q: "Which of the following is a physical hazard?", options: ["Scissor lying on the floor", "Corona virus", "Toxic Fumes", "Cleaning agent"], c: 0, exp: "মেঝেতে কাঁচি (Scissor) পড়ে থাকা একটি শারীরিক বিপদের (Physical hazard) কারণ হতে পারে।" },
+        { q: "What is the function of the 'Refine edge' Option in Photoshop?", options: ["To create new edges", "To adjust color balance", "To smooth and enhance color selection", "To duplicate layer"], c: 2, exp: "ফটোশপে চুলের মতো জটিল জিনিস সিলেকশন করার সময় সেই সিলেকশনের প্রান্তগুলোকে (edges) আরও স্মুথ ও নিখুঁত করতে Refine Edge ব্যবহৃত হয়।" },
+        { q: "How can you change the order of layer in the layers panel?", options: ["Drag the layer up or down in the panel", "Use the brush tool", "Right-Click and select order", "Double-Click the layer"], c: 0, exp: "লেয়ার প্যানেলে কোনো লেয়ারকে উপরে বা নিচে নিতে হলে সেটিতে মাউস দিয়ে ক্লিক করে ড্র্যাগ (টেনে) করতে হয়।" },
+        { q: "Why are mockups important in design?", options: ["Rhythm of design", "Balance of design", "Hierarchy of design", "Visual draft of design"], c: 3, exp: "মকআপ হলো ডিজাইনের একটি ভিজ্যুয়াল ড্রাফট বা বাস্তব রূপ। অর্থাৎ প্রিন্ট হওয়ার পর বা ওয়েবসাইটে ডিজাইনটি দেখতে কেমন লাগবে, তা ক্লায়েন্টকে দেখানোর জন্যই মকআপ করা হয়।" },
+        { q: "Which of the following mark used to define where to trim away the outer edges of the paper after printing?", options: ["Registration mark", "Color Bar", "Crop Marks", "A Ruler"], c: 2, exp: "কাগজ প্রিন্ট হওয়ার পর কাগজের অতিরিক্ত অংশ ঠিক কোন জায়গা থেকে কাটতে হবে, তা নির্দেশ করতে Crop Marks ব্যবহৃত হয়।" },
+        { q: "Which of the example of social media platform?", options: ["LinkedIn", "Yahoo", "Google", "Zoom"], c: 0, exp: "অপশনগুলোর মধ্যে LinkedIn হলো প্রফেশনালদের জন্য একটি জনপ্রিয় সোশ্যাল মিডিয়া প্ল্যাটফর্ম।" },
+        { q: "If you want to output your design, you must know the size of the paper used by the printing machine. In that case what is the standard size of Double Demy Paper?", options: ["17.5 x 22.5 in", "22.5 x 35.5 in", "20.2 x 40.4 in", "30.2 x 40.5 in"], c: 1, exp: "প্রিন্টিং প্রেসে ব্যবহৃত ডাবল ডিমাই (Double Demy) কাগজের স্ট্যান্ডার্ড সাইজ হলো সাড়ে বাইশ বাই সাড়ে পঁয়ত্রিশ ইঞ্চি (22.5 x 35.5 in)।" },
+        { q: "What is a design brief in terms of vector design?", options: ["A details document outlining project goals, audience and specific requirements", "A narrative describing the conceptual story behind the design", "A Marketing place showcasing the design's features and benefits", "A Compiled list of unrelated tasks associated with the project"], c: 0, exp: "ডিজাইন ব্রিফ হলো ক্লায়েন্টের দেওয়া একটি ডকুমেন্টস যেখানে ডিজাইনের উদ্দেশ্য, টার্গেট অডিয়েন্স এবং প্রয়োজনীয় রিকোয়ারমেন্টস লেখা থাকে।" },
+        { q: "Which tool is used to control the path and create the connection between each anchor point?", options: ["Pen Tool", "Blob brush tool", "Curvature", "Paintbrush"], c: 0, exp: "পেন টুল (Pen Tool) ব্যবহার করে অ্যাংকর পয়েন্ট তৈরি করা হয় এবং সেই পয়েন্টগুলোকে মিলিয়ে পাথ (Path) বা নির্দিষ্ট শেপ তৈরি করা হয়।" },
+        { q: "Kerning, tracking and leading are the properties of which attributes?", options: ["Paragraph", "Character", "Curvature", "Paintbrush"], c: 1, exp: "ফন্ট সাইজ, লাইন স্পেস (Leading), অক্ষরগুলোর মাঝের গ্যাপ (Tracking/Kerning) ইত্যাদি টেক্সট ফরম্যাটিং অপশনগুলো Character প্যানেলে থাকে।" },
+        { q: "Which file format is commonly used for final designs intended for web use?", options: ["MP4", "PNG", "PDF", "TXT"], c: 1, exp: "ওয়েবসাইটের জন্য সাধারণত JPEG, PNG বা WebP ফরম্যাট ব্যবহার করা হয়। এখানে অপশনগুলোর মধ্যে PNG সঠিক উত্তর, যা ছবির কোয়ালিটি ভালো রাখে।" },
+        { q: "We can check spelling and grammar error by pressing ______ in MS word.", options: ["Shift + F7", "Ctrl + F7", "Alt + F7", "F7"], c: 3, exp: "এমএস ওয়ার্ডে কীবোর্ডের F7 বাটন চাপলে সরাসরি Spelling and Grammar চেকিং অপশনটি চালু হয়।" },
+        { q: "Which of the following the distribution of the visual weight of objects, colours, texture and space?", options: ["Hierachy", "Alignment", "Proximity", "Balance"], c: 3, exp: "ডিজাইনের উপাদানগুলোর (রঙ, টেক্সচার, শেপ) ভিজ্যুয়াল ওয়েট বা ভারসম্য ঠিক রাখাকে Balance (ব্যালেন্স) বলে।" },
+        { q: "What dpi and color mode setting should you used for print?", options: ["1000 dpi – CMYK", "3000 dpi – RGB", "72 dpi – CMYK", "300 dpi – CMYK"], c: 3, exp: "যেকোনো ডিজাইন প্রিন্ট করার জন্য স্ট্যান্ডার্ড রেজোলিউশন হলো 300 dpi এবং প্রিন্টিং কালার মোড হলো CMYK (সায়ান, ম্যাজেন্টা, ইয়েলো, ব্ল্যাক)।" },
+        { q: "Which of the following shape tools is NOT available in Adobe Illustrator CC (2017)?", options: ["Circle tool", "Rectangle tool", "Polygon tool", "Star tool"], c: 0, exp: "ইলাস্ট্রেটরে বৃত্ত আঁকার জন্য যে টুলটি থাকে তার নাম Ellipse Tool, এর নাম 'Circle tool' নয়। তাই Circle tool অপশনটি ভুল।" },
+        { q: "Which Illustrator panel shows the options for a currently selected object?", options: ["Tools panel", "Control panel", "Layers panel", "Appearance Panel"], c: 1, exp: "কোনো অবজেক্ট সিলেক্ট করলে তার সাথে সম্পর্কিত অপশনগুলো (যেমন- কালার, স্ট্রোক, সাইজ) উপরের Control Panel বা Properties Panel-এ দেখায়।" },
+        { q: "The F7 function key is for:", options: ["Adjustment", "Colors", "Layers", "Tool box"], c: 2, exp: "ফটোশপ এবং ইলাস্ট্রেটরে কীবোর্ডের F7 বাটন চাপলে Layers Panel হাইড অথবা শো হয়।" },
+        { q: "Which item appears dimly behind the main body text?", options: ["Background", "Water color", "Watermark", "Back color"], c: 2, exp: "ডকুমেন্ট বা ইমেজের মূল টেক্সটের পেছনে হালকা বা আবছাভাবে যে লোগো বা টেক্সট দেওয়া থাকে, তাকে Watermark (জলছাপ) বলে।" },
+        { q: "Which is not an online market place for a graphic designer?", options: ["Design crowd", "Design hill", "Crowd spring", "Amazon"], c: 3, exp: "Design Crowd, Design Hill এগুলো ডিজাইনারদের ফ্রিল্যান্সিং মার্কেটপ্লেস। কিন্তু Amazon একটি ই-কমার্স সাইট, গ্রাফিক্স মার্কেটপ্লেস নয়।" },
+        { q: "Which element works to harmonize the elements of works of art?", options: ["Expression", "Proportion", "Motif", "Composite"], c: 3, exp: "একটি ডিজাইন বা আর্টের বিভিন্ন উপাদানকে একসাথে মিলিয়ে একটি সামঞ্জস্যপূর্ণ রূপ দেওয়াকে কম্পোজিট বা কম্পোজিশন (Composite) বলে।" },
+        { q: "Which of the following is a characteristic of warm or cool colors?", options: ["Template", "Temperature", "Trademark", "Texture"], c: 1, exp: "রঙের উষ্ণতা (Warm) বা শীতলতা (Cool) বোঝাতে Color Temperature (কালার টেম্পারেচার) শব্দটি ব্যবহৃত হয়।" },
+        { q: "Why do we use the appearance panel?", options: ["To view masking effects", "To view the position of the selected object", "To view and adjust the appearance attributes of an object, group or layer", "None of these"], c: 2, exp: "কোনো অবজেক্টে কয়টি ফিল কালার, স্ট্রোক বা ইফেক্ট দেওয়া আছে তা দেখতে এবং এডিট করতে Appearance Panel ব্যবহৃত হয়।" },
+        { q: "By using which method objects in illustrator can be combined and produce separate objects by ungroup?", options: ["Layer", "Pathfinder", "Group selection tool", "Select and make group"], c: 1, exp: "Pathfinder টুলের সাহায্যে একাধিক শেপ জোড়া লাগানো যায় বা কেটে আলাদা টুকরো করা যায়, যা পরে আনগ্রুপ করে আলাদা করা সম্ভব।" },
+        { q: "Which of the following is essential for effective communication in a team?", options: ["Clear Communication", "Individual ambition", "Competitive spirit", "Physical appearance"], c: 0, exp: "টিমের সদস্যদের মধ্যে সফলভাবে কাজ করার জন্য স্পষ্ট এবং সুন্দর যোগাযোগ (Clear Communication) সবচেয়ে বেশি জরুরি।" },
+        { q: "Providing realistic estimates for time, cost, and delivery during negotiation helps to:", options: ["Create misleading optimism", "Establish credibility and minimize future disputes", "It's project timelines unrealistically", "Overlook critical project needs"], c: 1, exp: "ক্লায়েন্টকে কাজের সময় এবং খরচ সম্পর্কে সঠিক ধারণা দিলে ডিজাইনারের ওপর বিশ্বাসযোগ্যতা বাড়ে এবং ভবিষ্যতে কোনো ঝামেলা বা তর্ক (Disputes) হয় না।" },
+        { q: "Which of the following plays a role in maintaining a person's honesty, responsibility and respectful behavior towards others?", options: ["Personal Conduct", "Professional conduct", "Collective Behavior", "Ethical behavior"], c: 3, exp: "সততা, দায়িত্ববোধ এবং অন্যের প্রতি সম্মানজনক আচরণ বজায় রাখাকে 'নৈতিক আচরণ' বা Ethical behavior বলে।" },
+        { q: "What is the purpose of color separation in design?", options: ["To combine all colors into one layer", "To prepare the design for printing with different color plates", "To change the design layout"], c: 1, exp: "প্রিন্টিং প্রেসে ছাপার জন্য ডিজাইনের CMYK কালারগুলোকে আলাদা আলাদা প্লেটে ভাগ করাকে Color Separation বলে।" },
+        { q: "Which of the following is the default page setup orientation of slide in PowerPoint?", options: ["Vertical", "Landscape", "Portrait", "None of them"], c: 1, exp: "মাইক্রোসফট পাওয়ারপয়েন্ট ওপেন করলে ডিফল্টভাবে স্লাইডগুলো আড়াআড়ি বা Landscape মোডে থাকে।" },
+        { q: "Which image format is faster for internet upload/download?", options: ["GIF", "TXT", "TIFF/JPEG", "PNG"], c: 3, exp: "প্রশ্নের অপশন অনুযায়ী, ওয়েব ব্রাউজারে ব্যবহার এবং দ্রুত লোড হওয়ার জন্য PNG একটি স্ট্যান্ডার্ড এবং ফাস্ট ফরম্যাট।" },
+        { q: "Space is the element of:", options: ["Design principle", "Design element", "Color theory", "Color element"], c: 1, exp: "স্পেস (Space) বা খালি জায়গা হলো ডিজাইনের ৭টি মূল উপাদানের (Design Element) একটি। (অন্যগুলো হলো- Line, Shape, Form, Texture ইত্যাদি)।" },
+        { q: "Is defined as an alternating occurrence of sounds and silence:", options: ["Scale", "Unity", "Hierarchy", "Rhythm"], c: 3, exp: "ডিজাইনে বা শব্দে উপাদানগুলোর বারবার ফিরে আসা বা একটি নির্দিষ্ট প্যাটার্ন তৈরি করাকে Rhythm (রিদম বা ছন্দ) বলে।" },
+        { q: "A graphical mark used to identify a company, organization, product or brand is called:", options: ["Design", "Logo", "Pictogram", "Illustration"], c: 1, exp: "কোনো কোম্পানি, প্রতিষ্ঠান বা ব্র্যান্ডকে সহজে চেনার জন্য যে গ্রাফিক্যাল চিহ্ন ব্যবহার করা হয়, তাকে Logo (লোগো) বলে।" },
+        { q: "Is the placement or arrangement of visual elements or ingredients in a work of art:", options: ["Painting", "Composition", "Sculpture", "Geometry"], c: 1, exp: "ডিজাইনের উপাদানগুলোকে (যেমন ছবি, টেক্সট, শেপ) সুন্দরভাবে সাজিয়ে উপস্থাপন করাকে Composition (কম্পোজিশন) বলে।" },
+        { q: "Difference in color and light is:", options: ["Harmony", "Contrast", "Unity", "Balance"], c: 1, exp: "দুটি রঙের বা আলোর মধ্যে যে স্পষ্ট পার্থক্য দেখা যায় (যেমন- সাদার বিপরীতে কালো), তাকে Contrast (কন্ট্রাস্ট) বলে।" },
+        { q: "Surface Quality of a design is:", options: ["Harmony", "Texture", "Balance", "Unity"], c: 1, exp: "কোনো ডিজাইন বা বস্তুর ওপরের পৃষ্ঠটি দেখতে কেমন (মসৃণ, খসখসে বা থ্রিডি) তার ভিজ্যুয়াল ফিল-কে Texture (টেক্সচার) বলে।" },
+        
+        // Short questions converted to MCQs
+        { q: "What is the shortcut key for manual line break?", options: ["Shift + Enter", "Ctrl + Enter", "Alt + Enter", "Tab + Enter"], c: 0, exp: "এমএস ওয়ার্ড বা অন্যান্য সফটওয়্যারে নতুন প্যারাগ্রাফ তৈরি না করে শুধুমাত্র পরের লাইনে যেতে (Manual Line Break) Shift + Enter চাপতে হয়।" },
+        { q: "Which tools allows you to copy one area of the layer to another area of the layer?", options: ["Magic Wand Tool", "Pen Tool", "Clone Stamp Tool", "Eraser Tool"], c: 2, exp: "ছবির কোনো নির্দিষ্ট অংশ হুবহু কপি করে অন্য জায়গায় বসাতে ফটোশপে Clone Stamp Tool ব্যবহৃত হয়।" },
+        { q: "What is the name of three(3) common color mode in Graphics Design?", options: ["HSL, HSV, LAB", "RGB, CMYK, Gray Scale", "Red, Green, Blue", "Vector, Raster, Pixel"], c: 1, exp: "গ্রাফিক্স ডিজাইনে সবচেয়ে বেশি ব্যবহৃত তিনটি কালার মোড হলো RGB (স্ক্রিনের জন্য), CMYK (প্রিন্টের জন্য) এবং Grayscale (সাদাকালো ইমেজের জন্য)।" },
+        { q: "What do you mean by Placeholder Text?", options: ["Temporary filler text (Lorem Ipsum) used for testing layouts", "Main heading font used in printing", "Copyright text for images", "Final published text content"], c: 0, exp: "ডিজাইনের লেআউট কেমন হবে তা দেখার জন্য আসল টেক্সটের বদলে যে ডামি টেক্সট (যেমন- Lorem Ipsum) ব্যবহার করা হয়, তাকে Placeholder Text বা Filler Text বলে।" },
+        { q: "What is Thumbnail in design process?", options: ["Final printed design ready for delivery", "Rough sketches created to explore layouts and possibilities", "A selection tool in Photoshop", "A color palette generating website"], c: 1, exp: "ডিজাইন ফাইনাল করার আগে আইডিয়া জেনারেট করার জন্য কাগজে বা সফটওয়্যারে যে ছোট ছোট রাফ স্কেচ (Rough sketch) তৈরি করা হয়, তাকে থাম্বনেইল বলে।" },
+        { q: "Why we use Bleed in our design?", options: ["To make the colors look brighter", "To align the paragraph text perfectly", "To extend the image beyond the trim edge, leaving no white margin", "To reduce the file size for internet upload"], c: 2, exp: "প্রিন্ট করার পর কাগজ কাটার সময় যেন ডিজাইনের সাইডে কোনো সাদা অংশ (White margin) বের হয়ে না থাকে, সেজন্য ডিজাইনকে মূল সাইজের চেয়ে সামান্য বাড়িয়ে দেওয়া হয়। এই বাড়তি অংশকেই Bleed বলে।" },
+        { q: "What is Texture?", options: ["Visual or tactile surface appearance of a design", "Color adjustment and brightness", "Font style and typography", "Canvas size and resolution"], c: 0, exp: "টেক্সচার হলো কোনো কিছুর সারফেস বা পৃষ্ঠের বৈশিষ্ট্য। ডিজাইনে টেক্সচার ব্যবহার করলে মনে হয় এটি হাত দিয়ে স্পর্শ করা যাবে (যেমন- কাগজের ভাঁজ বা কাঠের পৃষ্ঠ)।" },
+        { q: "What is Typography?", options: ["Drawing vector shapes using pen tool", "The technique and art of arranging type to make written language readable and appealing", "Mixing primary colors to create secondary colors", "Printing process on flex banners"], c: 1, exp: "লেখার ফন্ট, সাইজ এবং স্পেসিং সুন্দরভাবে সাজিয়ে টেক্সটকে পড়ার উপযোগী এবং আকর্ষণীয় করে তোলার শিল্পকেই Typography (টাইপোগ্রাফি) বলে।" }
+    ];
+
+    // Variables
+    const screenWelcome = document.getElementById('screen-welcome');
+    const screenExam = document.getElementById('screen-exam');
+    const screenResult = document.getElementById('screen-result');
+    const screenLeaderboard = document.getElementById('screen-leaderboard');
+    
+    let studentName = "";
+    const TOTAL_TIME = 60 * 60; // 60 minutes in seconds
+    let timeRemaining = TOTAL_TIME;
+    let timerInterval;
+
+    // Initialization
+    document.getElementById('total-q-display').innerText = quizData.length;
+    document.getElementById('total-q-result').innerText = quizData.length;
+
+    // Start Exam Function
+    function startExam() {
+        const nameInput = document.getElementById('studentName');
+        studentName = nameInput.value.trim();
+        
+        if (!studentName) {
+            nameInput.style.borderColor = "var(--danger)";
+            alert("পরীক্ষা শুরু করতে তোমার পুরো নাম লিখতে হবে!");
+            return;
+        }
+
+        document.getElementById('display-name').innerText = studentName;
+        renderQuestions();
+        
+        screenWelcome.classList.add('hidden');
+        screenExam.classList.remove('hidden');
+        window.scrollTo(0, 0);
+        
+        // Start Timer
+        timeRemaining = TOTAL_TIME;
+        timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    // Timer Logic
+    function updateTimer() {
+        timeRemaining--;
+        const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+        const s = (timeRemaining % 60).toString().padStart(2, '0');
+        document.getElementById('timer-display').innerText = `⏱ ${m}:${s}`;
+        
+        if (timeRemaining <= 300) { // Last 5 mins warning
+            document.getElementById('timer-display').style.background = "#fecaca";
+            document.getElementById('timer-display').style.color = "#991b1b";
+        }
+        
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert("সময় শেষ! খাতা স্বয়ংক্রিয়ভাবে জমা দেওয়া হচ্ছে।");
+            submitExam(new FormData(document.getElementById('exam-form')));
+        }
+    }
+
+    // Render Questions Dynamically
+    function renderQuestions() {
+        const container = document.getElementById('questions-container');
+        let html = "";
+        
+        quizData.forEach((item, index) => {
+            html += `
+            <div class="question-box" id="q-box-${index}">
+                <div class="q-title"><span style="color:var(--primary); font-weight:800;">Q${index + 1}.</span> ${item.q}</div>
+                <div class="options-wrapper">
+                    ${item.options.map((opt, oIndex) => `
+                        <label class="option-label" onclick="selectOption(this, ${index})">
+                            <input type="radio" name="q${index}" value="${oIndex}">
+                            <span>${opt}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    // Handle Option Selection
+    function selectOption(label, qIndex) {
+        const box = document.getElementById(`q-box-${qIndex}`);
+        box.classList.remove('unanswered'); // Remove error highlight
+        
+        const allLabels = box.querySelectorAll('.option-label');
+        allLabels.forEach(l => l.classList.remove('selected'));
+        
+        label.classList.add('selected');
+        label.querySelector('input').checked = true;
+    }
+
+    // Form Submission Event
+    document.getElementById('exam-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        let firstUnanswered = -1;
+
+        // Check if all questions are answered
+        for (let i = 0; i < quizData.length; i++) {
+            if (!formData.has(`q${i}`)) {
+                if (firstUnanswered === -1) firstUnanswered = i;
+                document.getElementById(`q-box-${i}`).classList.add('unanswered');
+            }
+        }
+
+        if (firstUnanswered !== -1) {
+            alert("তুমি কিছু প্রশ্নের উত্তর দাওনি! লাল চিহ্নিত প্রশ্নগুলো চেক করো।");
+            document.getElementById(`q-box-${firstUnanswered}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        if (confirm("তুমি কি নিশ্চিত যে পরীক্ষা জমা দিতে চাও?")) {
+            clearInterval(timerInterval);
+            submitExam(formData);
+        }
+    });
+
+    // Process and Display Results
+    function submitExam(formData) {
+        let score = 0;
+        let reviewHTML = "";
+        let wrongAnswersCount = 0;
+
+        quizData.forEach((item, index) => {
+            const userAnswerStr = formData.get(`q${index}`);
+            const userAnswer = userAnswerStr ? parseInt(userAnswerStr) : -1;
+
+            if (userAnswer === item.c) {
+                score++;
+            } else {
+                wrongAnswersCount++;
+                const givenAnsText = userAnswer !== -1 ? item.options[userAnswer] : "উত্তর দেওয়া হয়নি";
+                
+                reviewHTML += `
+                <div class="explanation-box">
+                    <div class="exp-q">Q${index + 1}. ${item.q}</div>
+                    <div class="exp-ans exp-wrong">❌ তোমার উত্তর: ${givenAnsText}</div>
+                    <div class="exp-ans exp-correct">✅ সঠিক উত্তর: ${item.options[item.c]}</div>
+                    <div class="exp-details">💡 <b>কেন এটি সঠিক?</b><br>${item.exp}</div>
+                </div>`;
+            }
+        });
+
+        // Calculations
+        const timeTaken = TOTAL_TIME - timeRemaining;
+        const m = Math.floor(timeTaken / 60);
+        const s = timeTaken % 60;
+        const percentage = Math.round((score / quizData.length) * 100);
+        
+        // Update DOM
+        document.getElementById('result-name-display').innerText = studentName;
+        document.getElementById('correct-answers-count').innerText = score;
+        document.getElementById('final-score-pct').innerText = percentage + "%";
+        document.getElementById('final-score-pct').style.color = percentage >= 80 ? "var(--success)" : percentage >= 50 ? "var(--warning)" : "var(--danger)";
+        document.getElementById('time-taken-display').innerText = `${m} মিনিট ${s} সেকেন্ড`;
+
+        // Show Review Section if wrong answers exist
+        if (wrongAnswersCount > 0) {
+            document.getElementById('review-section').classList.remove('hidden');
+            document.getElementById('review-container').innerHTML = reviewHTML;
+        } else {
+            document.getElementById('review-section').classList.add('hidden');
+        }
+
+        // Save & Switch Screens
+        saveToLeaderboard(studentName, percentage, timeTaken);
+        screenExam.classList.add('hidden');
+        screenResult.classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+
+    // Leaderboard Logic
+    function saveToLeaderboard(name, score, time) {
+        let lb = JSON.parse(localStorage.getItem('designExamLB_Full')) || [];
+        lb.push({ name, score, time });
+        localStorage.setItem('designExamLB_Full', JSON.stringify(lb));
+    }
+
+    function showLeaderboard() {
+        let lb = JSON.parse(localStorage.getItem('designExamLB_Full')) || [];
+        
+        // Sort highest score first, then lowest time
+        lb.sort((a, b) => b.score - a.score || a.time - b.time);
+
+        const tbody = document.getElementById('leaderboard-body');
+        if (lb.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--text-muted); font-weight: 500;">এখনো কেউ পরীক্ষা দেয়নি।</td></tr>`;
+        } else {
+            tbody.innerHTML = lb.map((entry, i) => `
+                <tr>
+                    <td><span style="background: #e2e8f0; padding: 4px 10px; border-radius: 20px; font-weight: 700; color: #475569;">#${i + 1}</span></td>
+                    <td style="font-weight: 600; color: #0f172a;">${entry.name}</td>
+                    <td><span style="color: var(--primary); font-weight: 700; font-size: 1.1rem;">${entry.score}%</span></td>
+                    <td style="color: #64748b;">${Math.floor(entry.time / 60)} মি ${entry.time % 60} সে</td>
+                </tr>
+            `).join('');
+        }
+
+        screenWelcome.classList.add('hidden');
+        screenResult.classList.add('hidden');
+        screenLeaderboard.classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
